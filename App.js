@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, ScrollView, View } from 'react-native';
 import Input from './Input.js';
 
 export default class App extends React.Component {
@@ -22,21 +22,40 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Input
-          onChangeText={this.updateCombination.bind(this)}
-        />
-        <Text>Combination:</Text>
-        { this.state.combination.map((plateWeight, i) => (
-          <Text>{plateWeight} </Text>)
-        )}
-        <Text>Error: {this.state.targetWeight - this.state.combinationWeight}</Text>
-      </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.inputView}>
+          <Text style={{ fontSize: 25 }}> Weight: </Text>
+          <Input
+            onChangeText={this.updateCombination.bind(this)}
+          />
+        </View>
+
+        <this.CombinationInfo /> 
+      </ScrollView>
     );
   }
 
+  CombinationInfo = () => {
+    if (this.state.combinationWeight !== this.state.barWeight) {
+      return (
+        <View>
+          <Text style={{ fontWeight: "bold", fontSize: 25, marginTop: "3%" }}>Combination:</Text>
+
+          {this.state.combination.map((plateWeight, i) => (
+            <Text style={{ fontSize: 25 }}>{plateWeight}</Text>)
+          )}
+
+          <Text style={{ fontStyle: "italic", marginTop: "3%", fontSize: 30 }}>
+            Error: {Number(this.state.combinationWeight - this.state.targetWeight).toFixed(2)}
+          </Text>
+        </View>
+      );
+    } else {
+      return (<Text>No information to display</Text>);
+    }
+  }
+
   updateCombination(targetWeight) {
-    console.log("Update")
     const allCombinations = this.getAllSubsets(this.state.platePairsAvg)
     let lowestError = -1
     let lowestErrorWeight = -1
@@ -80,5 +99,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  inputView: {
+   flexDirection: 'row',
+   justifyContent: 'center',
+   alignItems: 'center',
+  },
+  scrollView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 

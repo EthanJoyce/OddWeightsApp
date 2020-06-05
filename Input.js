@@ -10,7 +10,7 @@ const Input = ({inputValue, onChangeText}) => (
       keyboardType="number-pad"
       multiline={false}
       underlineColorAndroid="transparent"
-      maxLength={30}
+      maxLength={8}
       autoCorrect={false}
     />
 );
