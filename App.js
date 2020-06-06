@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { Text, Card, ThemeProvider } from 'react-native-elements';
 import Input from './Input.js';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      weightUnit: 'lb',
       barWeight: 47,
       platePairsAvg: [ 58.5, 56.5, 50.75, 32.75,
                           13, 12.25,
@@ -18,40 +20,45 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.updateCombination()
-  } 
+  }
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.inputView}>
-          <Text style={{ fontSize: 25 }}> Weight: </Text>
-          <Input
-            onChangeText={this.updateCombination.bind(this)}
-          />
-        </View>
+      <ThemeProvider style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <Card key='input' title={`Weight (${this.state.weightUnit})`} style={styles.inputView}>
+            <Input
+              onChangeText={this.updateCombination.bind(this)}
+            />
+          </Card>
 
-        <this.CombinationInfo /> 
-      </ScrollView>
+          <this.CombinationInfo key='combinfo' /> 
+        </ScrollView>
+      </ThemeProvider>
     );
   }
 
   CombinationInfo = () => {
     if (this.state.combinationWeight !== this.state.barWeight) {
       return (
-        <View>
-          <Text style={{ fontWeight: "bold", fontSize: 25, marginTop: "3%" }}>Combination:</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Card title="Combination" innerStyle={{ flexDirection: 'row' }}>
+            {this.state.combination.map((plateWeight, i) => (
+              <Text key={plateWeight+i} style={{ fontSize: 25 }}>
+                {plateWeight} <Italic>{this.state.weightUnit}</Italic>
+              </Text>)
+            )}
+          </Card>
 
-          {this.state.combination.map((plateWeight, i) => (
-            <Text style={{ fontSize: 25 }}>{plateWeight}</Text>)
-          )}
-
-          <Text style={{ fontStyle: "italic", marginTop: "3%", fontSize: 30 }}>
-            Error: {Number(this.state.combinationWeight - this.state.targetWeight).toFixed(2)}
-          </Text>
+          <Card title="Error" style={{ flex: 1 }}>
+            <Text style={{ fontStyle: "italic", marginTop: "3%", fontSize: 30 }}>
+              {Number(this.state.combinationWeight - this.state.targetWeight).toFixed(2)} {this.state.weightUnit}
+            </Text>
+          </Card>
         </View>
       );
     } else {
-      return (<Text>No information to display</Text>);
+      return (<Text style={{ marginTop: '8%' }}>No information to display</Text>);
     }
   }
 
@@ -92,6 +99,8 @@ export default class App extends React.Component {
   }
 }
 
+const Italic = (props) => <Text style={{ fontStyle: 'italic' }}>{props.children}</Text>
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -100,9 +109,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputView: {
-   flexDirection: 'row',
-   justifyContent: 'center',
-   alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollView: {
     flex: 1,
