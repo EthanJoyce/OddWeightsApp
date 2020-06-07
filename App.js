@@ -58,7 +58,7 @@ export default class App extends React.Component {
         </View>
       );
     } else {
-      return (<Text style={{ marginTop: '8%' }}>No information to display</Text>);
+      return null;
     }
   }
 
