@@ -1,12 +1,16 @@
 {
   "expo": {
-    "name": "OddWeightsRN",
-    "slug": "OddWeightsRN",
+    "name": "OddWeights",
+    "slug": "oddweights",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
+    "android": {
+      "package": "xyz.ethanjoyce.oddweights",
+      "versionCode": 1
+    },
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
