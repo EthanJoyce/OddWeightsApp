@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { Text, Card, ThemeProvider } from 'react-native-elements';
-import Input from './Input.js';
+import Input from './Input';
 
 export default class App extends React.Component {
   constructor(props) {
