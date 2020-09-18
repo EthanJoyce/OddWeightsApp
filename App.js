@@ -9,9 +9,11 @@ export default class App extends React.Component {
     this.state = {
       weightUnit: 'lb',
       barWeight: 47,
-      platePairsAvg: [ 58.5, 56.5, 50.75, 32.75,
-                          13, 12.25,
-                          5, 4.5, 0.625, 0.625 ],
+      platePairsAvg: [
+        58.5, 56.5, 50.75, 50.5, 50.5,
+        32.75, 21.5, 21.25, 19.75, 13, 12.25,
+        5, 4.5, 0.625, 0.625
+      ],
       targetWeight: 47,
       combination: [],
       combinationWeight: -1,
