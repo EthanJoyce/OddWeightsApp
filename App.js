@@ -11,8 +11,8 @@ export default class App extends React.Component {
       barWeight: 47,
       platePairsAvg: [
         58.5, 56.5, 50.75, 50.5, 50.5,
-        32.75, 21.5, 21.25, 19.75, 13, 12.25,
-        5, 4.5, 0.625, 0.625
+        32.75, 21, 21, 20, 13, 12.25,
+        10, 5, 4.5, 0.625, 0.625
       ],
       targetWeight: 47,
       combination: [],
