@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, Picker } from 'react-native';
 import { Text, Card, ThemeProvider } from 'react-native-elements';
 import Input from './Input';
 
@@ -8,7 +8,11 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       weightUnit: 'lb',
-      barWeight: 47,
+      bars: {
+        "Safety Squat Bar": 47,
+        "StrongArm Power Bar": 45,
+      },
+      barSelected: "Safety Squat Bar",
       platePairsAvg: [
         58.5, 56.5, 50.75, 50.5, 50.5,
         32.75, 21, 21, 20, 13, 12.25,
@@ -25,10 +29,27 @@ export default class App extends React.Component {
   }
 
   render() {
+    const { barSelected, bars } = this.state;
     return (
       <ThemeProvider style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.container}>
-          <Card key='input' title={`Weight (${this.state.weightUnit})`} style={styles.inputView}>
+          <Card
+            key='targetweight-input'
+            title={`Weight (${this.state.weightUnit})`}
+            style={styles.inputView}
+          >
+            <Picker
+              selectedValue={barSelected}
+              onValueChange={(itemValue) => {
+                this.updateBarWeight(itemValue);
+              }}
+            >
+              {
+                Object.keys(bars).map((barName) => (
+                  <Picker.Item key={barName} label={barName} value={barName} />
+                ))
+              }
+            </Picker>
             <Input
               onChangeText={this.updateCombination.bind(this)}
             />
@@ -64,7 +85,20 @@ export default class App extends React.Component {
     }
   }
 
+  updateBarWeight = (barSelected) => {
+    const { targetWeight } = this.state;
+    this.setState({
+      barSelected,
+    });
+    setTimeout(() => {
+      this.updateCombination(targetWeight);
+    }, 0);
+  }
+
   updateCombination(targetWeight) {
+    const { barSelected, bars } = this.state;
+    const barWeight = bars[barSelected];
+
     const allCombinations = this.getAllSubsets(this.state.platePairsAvg)
     let lowestError = -1
     let lowestErrorWeight = -1
@@ -72,7 +106,7 @@ export default class App extends React.Component {
 
     for (index in allCombinations) {
       let comb = allCombinations[index]
-      let netWeight = this.state.barWeight + 2*comb.reduce((a, b) => a+b,0)
+      let netWeight = barWeight + 2*comb.reduce((a, b) => a+b,0)
       let absError = Math.abs(targetWeight - netWeight)
 
       if (absError < lowestError || lowestErrorComb === null) {
@@ -107,7 +141,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
   },
   inputView: {
