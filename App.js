@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, View, Picker } from 'react-native';
+import { StyleSheet, ScrollView, View, Picker, CheckBox } from 'react-native';
 import { Text, Card, ThemeProvider } from 'react-native-elements';
 import Input from './Input';
 
@@ -18,6 +18,7 @@ export default class App extends React.Component {
         32.75, 21, 21, 20, 13, 12.25,
         10, 5, 4.5, 0.625, 0.625
       ],
+      platePairsAvgSaved: [],
       targetWeight: 47,
       combination: [],
       combinationWeight: -1,
@@ -62,27 +63,57 @@ export default class App extends React.Component {
   }
 
   CombinationInfo = () => {
-    if (this.state.combinationWeight !== this.state.barWeight) {
-      return (
-        <View style={{ flexDirection: 'row' }}>
-          <Card title="Combination" innerStyle={{ flexDirection: 'row' }}>
-            {this.state.combination.map((plateWeight, i) => (
-              <Text key={plateWeight+i} style={{ fontSize: 25 }}>
-                {plateWeight} <Italic>{this.state.weightUnit}</Italic>
-              </Text>)
-            )}
-          </Card>
+    const {
+      combinationWeight,
+      targetWeight,
+      weightUnit,
+      platePairsAvgSaved,
+    } = this.state;
 
-          <Card title="Error" style={{ flex: 1 }}>
-            <Text style={{ fontStyle: "italic", marginTop: "3%", fontSize: 30 }}>
-              {Number(this.state.combinationWeight - this.state.targetWeight).toFixed(2)} {this.state.weightUnit}
-            </Text>
-          </Card>
-        </View>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <Card title="Combination" innerStyle={{ flexDirection: 'row' }}>
+          {
+            this.state.combination.map((plateWeight, i) => (
+
+              <View style={{ flexDirection: 'row' }}>
+                <CheckBox
+                  value={platePairsAvgSaved.indexOf(plateWeight) > -1}
+                  onValueChange={(checked) => {
+                    if (checked) {
+                      platePairsAvgSaved.push(plateWeight);
+                    } else {
+                      // Remove from list
+                      const index = platePairsAvgSaved.indexOf(plateWeight);
+                      if (index > -1) {
+                        platePairsAvgSaved.splice(index, 1);
+                      }
+                    }
+                    this.setState({
+                      platePairsAvgSaved,
+                    });
+                  }}
+                />
+                <Text
+                  key={plateWeight+i}
+                  style={{ fontSize: 25 }}
+                >
+                  { plateWeight } <Italic>{ weightUnit }</Italic>
+                </Text>
+              </View>
+            ))
+          }
+        </Card>
+
+        <Card title="Error" style={{ flex: 1 }}>
+          <Text style={{ fontStyle: "italic", marginTop: "3%", fontSize: 30 }}>
+            {
+              Number(combinationWeight - targetWeight).toFixed(2)
+            } { weightUnit }
+          </Text>
+        </Card>
+      </View>
+    );
   }
 
   updateBarWeight = (barSelected) => {
@@ -96,23 +127,29 @@ export default class App extends React.Component {
   }
 
   updateCombination(targetWeight) {
-    const { barSelected, bars } = this.state;
+    const {
+      barSelected,
+      bars,
+      platePairsAvg,
+      platePairsAvgSaved,
+    } = this.state;
     const barWeight = bars[barSelected];
 
-    const allCombinations = this.getAllSubsets(this.state.platePairsAvg)
-    let lowestError = -1
-    let lowestErrorWeight = -1
-    let lowestErrorComb = null
+    const allCombinations = this.getAllSubsets(platePairsAvg, platePairsAvgSaved);
+
+    let lowestError = -1;
+    let lowestErrorWeight = -1;
+    let lowestErrorComb = null;
 
     for (index in allCombinations) {
-      let comb = allCombinations[index]
-      let netWeight = barWeight + 2*comb.reduce((a, b) => a+b,0)
-      let absError = Math.abs(targetWeight - netWeight)
+      let comb = allCombinations[index];
+      let netWeight = barWeight + 2*comb.reduce((a, b) => a+b,0);
+      let absError = Math.abs(targetWeight - netWeight);
 
       if (absError < lowestError || lowestErrorComb === null) {
-        lowestError = absError
-        lowestErrorWeight = netWeight
-        lowestErrorComb = comb
+        lowestError = absError;
+        lowestErrorWeight = netWeight;
+        lowestErrorComb = comb;
       }
     }
 
@@ -125,13 +162,17 @@ export default class App extends React.Component {
     return lowestErrorComb;
   }
 
-  getAllSubsets(theArray) { // Helper function
-      return theArray.reduce(
-          (subsets, value) => subsets.concat(
-            subsets.map(set => [value, ...set])
-          ),
-          [[]]
-      );
+  getAllSubsets(theArray, requiredVals) { // Helper function
+    const allSubsets = theArray.reduce(
+      (subsets, value) => (
+        subsets.concat(
+          subsets.map(set => [value, ...set])
+        )
+      ),
+      [requiredVals],
+    );
+
+    return allSubsets;
   }
 }
 
