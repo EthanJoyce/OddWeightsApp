@@ -10,7 +10,8 @@ export default class App extends React.Component {
       weightUnit: 'lb',
       bars: {
         "Safety Squat Bar": 47,
-        "StrongArm Power Bar": 45,
+        "StrongArm Power Bar": 43.5,
+        "EZ Curl Bar": 17.5,
       },
       barSelected: "Safety Squat Bar",
       platePairsAvg: [
