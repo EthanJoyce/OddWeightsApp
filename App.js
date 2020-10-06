@@ -77,7 +77,6 @@ export default class App extends React.Component {
         <Card title="Combination" innerStyle={{ flexDirection: 'row' }}>
           {
             this.state.combination.map((plateWeight, i) => (
-
               <View style={{ flexDirection: 'row' }}>
                 <CheckBox
                   value={platePairsAvgSaved.indexOf(plateWeight) > -1}
@@ -101,8 +100,13 @@ export default class App extends React.Component {
                       // Add back to original
                       platePairsAvg.push(plateWeight);
                     }
+
+                    // Sort plates so largest show up first always
+                    platePairsAvg.sort((a,b) => (a-b));
+
                     this.setState({
                       platePairsAvgSaved,
+                      platePairsAvg,
                     });
                   }}
                 />
