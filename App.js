@@ -65,6 +65,7 @@ export default class App extends React.Component {
 
   CombinationInfo = () => {
     const {
+      combination,
       combinationWeight,
       targetWeight,
       weightUnit,
@@ -76,8 +77,11 @@ export default class App extends React.Component {
       <View style={{ flexDirection: 'row' }}>
         <Card title="Combination" innerStyle={{ flexDirection: 'row' }}>
           {
-            this.state.combination.map((plateWeight, i) => (
-              <View style={{ flexDirection: 'row' }}>
+            combination.map((plateWeight, i) => (
+              <View
+                key={`platepair-row-${i}-${plateWeight}`}
+                style={{ flexDirection: 'row' }}
+              >
                 <CheckBox
                   value={platePairsAvgSaved.indexOf(plateWeight) > -1}
                   onValueChange={(checked) => {
