@@ -69,6 +69,7 @@ export default class App extends React.Component {
       targetWeight,
       weightUnit,
       platePairsAvgSaved,
+      platePairsAvg,
     } = this.state;
 
     return (
@@ -82,13 +83,23 @@ export default class App extends React.Component {
                   value={platePairsAvgSaved.indexOf(plateWeight) > -1}
                   onValueChange={(checked) => {
                     if (checked) {
+                      // Add to saved list
                       platePairsAvgSaved.push(plateWeight);
+
+                      // Remove from available plates (prevents duplicates)
+                      const index = platePairsAvg.indexOf(plateWeight);
+                      if (index > -1) {
+                        platePairsAvg.splice(index, 1);
+                      }
                     } else {
                       // Remove from list
                       const index = platePairsAvgSaved.indexOf(plateWeight);
                       if (index > -1) {
                         platePairsAvgSaved.splice(index, 1);
                       }
+
+                      // Add back to original
+                      platePairsAvg.push(plateWeight);
                     }
                     this.setState({
                       platePairsAvgSaved,
@@ -151,6 +162,8 @@ export default class App extends React.Component {
         lowestError = absError;
         lowestErrorWeight = netWeight;
         lowestErrorComb = comb;
+
+        lowestErrorComb.sort((a, b) => (a - b));
       }
     }
 
