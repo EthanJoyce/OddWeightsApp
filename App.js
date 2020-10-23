@@ -13,7 +13,7 @@ export default class App extends React.Component {
         "Safety Squat Bar": 47,
         "EZ Curl Bar": 17.5,
       },
-      barSelected: "Safety Squat Bar",
+      barSelected: "StrongArm Power Bar",
       platePairsAvg: [
         58.5, 56.5, 50.75, 50.5, 50.5,
         32.75, 21, 21, 20, 13, 12.25,
