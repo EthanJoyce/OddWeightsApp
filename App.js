@@ -9,8 +9,8 @@ export default class App extends React.Component {
     this.state = {
       weightUnit: 'lb',
       bars: {
-        "Safety Squat Bar": 47,
         "StrongArm Power Bar": 43.5,
+        "Safety Squat Bar": 47,
         "EZ Curl Bar": 17.5,
       },
       barSelected: "Safety Squat Bar",
