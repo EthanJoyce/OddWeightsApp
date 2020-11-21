@@ -3,6 +3,8 @@ import { StyleSheet, ScrollView, View, Picker, CheckBox } from 'react-native';
 import { Text, Card, ThemeProvider } from 'react-native-elements';
 import Input from './Input';
 
+const AD_ACCURACY = 4; // Number of decimal places to round to. Fix/hack for duplicate plate entry selection
+
 export default class App extends React.Component {
   constructor(props) {
     super(props)
@@ -15,7 +17,7 @@ export default class App extends React.Component {
       },
       barSelected: "StrongArm Power Bar",
       platePairsAvg: [
-        58.5, 56.5, 50.75, 50.5, 50.5,
+        58.5, 56.5, 50.75, 50.50001, 50.5,
         32.75, 21, 21, 20, 13, 12.25,
         10, 5, 4.5, 0.625, 0.625
       ],
@@ -61,6 +63,10 @@ export default class App extends React.Component {
         </ScrollView>
       </ThemeProvider>
     );
+  }
+
+  truncate (num, places) {
+    return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
   }
 
   CombinationInfo = () => {
@@ -118,7 +124,7 @@ export default class App extends React.Component {
                   key={plateWeight+i}
                   style={{ fontSize: 25 }}
                 >
-                  { plateWeight } <Italic>{ weightUnit }</Italic>
+                  { this.truncate(plateWeight, AD_ACCURACY) } <Italic>{ weightUnit }</Italic>
                 </Text>
               </View>
             ))
@@ -164,6 +170,8 @@ export default class App extends React.Component {
     for (index in allCombinations) {
       let comb = allCombinations[index];
       let netWeight = barWeight + 2*comb.reduce((a, b) => a+b,0);
+      netWeight = netWeight.toFixed(AD_ACCURACY); // Conf. decimal place accuracy to allow for anti-duplicate fix/hack
+      
       let absError = Math.abs(targetWeight - netWeight);
 
       if (absError < lowestError || lowestErrorComb === null) {
