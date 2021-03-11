@@ -17,9 +17,9 @@ export default class App extends React.Component {
       },
       barSelected: "StrongArm Power Bar",
       platePairsAvg: [
-        58.5, 56.5, 50.75, 50.5, 50.50001,
+        58.5, 56.5, 50.75, 50.5, 50.50001, 44.5,
         32.75, 25.5, 21, 21.00001, 20, 13, 12.25,
-        10, 5, 4.5, 0.625, 0.62501
+        10, 5, 4.5, 0.625, 0.62501,
       ],
       platePairsAvgSaved: [],
       targetWeight: 47,
