@@ -39,9 +39,15 @@ export default class App extends React.Component {
         <ScrollView contentContainerStyle={styles.container}>
           <Card
             key='targetweight-input'
-            title={`Weight (${this.state.weightUnit})`}
             style={styles.inputView}
           >
+            <Card.Title>
+              <Text style={styles.bold}>
+                Weight ({this.state.weightUnit})
+              </Text>
+            </Card.Title>
+            <Card.Divider />
+
             <Picker
               selectedValue={barSelected}
               onValueChange={(itemValue) => {
@@ -81,7 +87,9 @@ export default class App extends React.Component {
 
     return (
       <View style={{ flexDirection: 'row' }}>
-        <Card title="Combination" innerStyle={{ flexDirection: 'row' }}>
+        <Card innerStyle={{ flexDirection: 'row' }}>
+          <Card.Title><Text style={styles.bold}>Combination</Text></Card.Title>
+          <Card.Divider />
           {
             combination.map((plateWeight, i) => (
               <View
@@ -131,7 +139,9 @@ export default class App extends React.Component {
           }
         </Card>
 
-        <Card title="Error" style={{ flex: 1 }}>
+        <Card style={{ flex: 1 }}>
+          <Card.Title><Text style={styles.bold}>Error</Text></Card.Title>
+          <Card.Divider />
           <Text style={{ fontStyle: "italic", marginTop: "3%", fontSize: 30 }}>
             {
               Number(combinationWeight - targetWeight).toFixed(2)
@@ -224,6 +234,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
 });
 
